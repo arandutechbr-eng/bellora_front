@@ -1,10 +1,11 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
+import { loginUser, registerUser } from '../services/authService';
 import { User, UserRole } from '../types';
 
 type AuthContextValue = {
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string, role: UserRole) => Promise<void>;
+  login: (email: string, password: string, role: UserRole, isRegister: boolean, name?: string) => Promise<void>;
   logout: () => void;
 };
 
@@ -16,24 +17,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return saved ? JSON.parse(saved) : null;
   });
 
-  async function login(email: string, _password: string, role: UserRole) {
-    const session: User = {
-      id: crypto.randomUUID(),
-      name: role === 'professional' ? 'Profissional Demo' : 'Cliente Demo',
-      email,
-      role,
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop'
-    };
-    localStorage.setItem('auth:user', JSON.stringify(session));
-    setUser(session);
+  async function login(email: string, password: string, role: UserRole, isRegister = false, name?: string) {
+    const response = isRegister
+      ? await registerUser({ name: name ?? '', email, password, role })
+      : await loginUser(email, password);
+
+    localStorage.setItem('auth:token', response.access_token);
+    localStorage.setItem('auth:user', JSON.stringify(response.user));
+    setUser(response.user);
   }
 
   function logout() {
+    localStorage.removeItem('auth:token');
     localStorage.removeItem('auth:user');
     setUser(null);
   }
 
-  const value = useMemo(() => ({ user, isAuthenticated: Boolean(user), login, logout }), [user]);
+  const value = useMemo(
+    () => ({ user, isAuthenticated: Boolean(user), login, logout }),
+    [user]
+  );
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { fakeApi } from '../services/api';
+import { getProfessionals } from '../services/professionalService';
 import { Professional } from '../types';
 
 export function useProfessionals() {
@@ -7,7 +7,7 @@ export function useProfessionals() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fakeApi.getProfessionals().then(setProfessionals).finally(() => setLoading(false));
+    getProfessionals().then(setProfessionals).finally(() => setLoading(false));
   }, []);
 
   const featured = useMemo(() => professionals.filter((item) => item.rating >= 4.8), [professionals]);
