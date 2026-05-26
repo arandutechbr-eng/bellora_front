@@ -1,6 +1,18 @@
 import axios, { AxiosError } from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+/** Garante sufixo /api/v1 (Render e local usam esse prefixo). */
+export function normalizeApiBaseUrl(raw?: string): string {
+  const fallback = 'http://localhost:8000/api/v1';
+  const base = (raw?.trim() || fallback).replace(/\/$/, '');
+
+  if (base.endsWith('/api/v1')) {
+    return base;
+  }
+
+  return `${base}/api/v1`;
+}
+
+const API_BASE_URL = normalizeApiBaseUrl(import.meta.env.VITE_API_URL);
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
