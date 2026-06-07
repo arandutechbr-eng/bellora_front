@@ -82,8 +82,19 @@ export function defaultJobSpecs(type: ProfessionalType): Record<string, string |
 
 export function formatSpecValue(key: string, value: unknown): string {
   if (typeof value === 'boolean') return value ? 'Sim' : 'Não';
-  if (Array.isArray(value)) return value.join(', ');
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => (typeof item === 'string' ? capitalizeLabel(item) : String(item)))
+      .join(', ');
+  }
+  if (typeof value === 'string') return capitalizeLabel(value);
   return String(value ?? '—');
+}
+
+function capitalizeLabel(text: string): string {
+  const trimmed = text.trim();
+  if (!trimmed) return trimmed;
+  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
 }
 
 export const DEFAULT_WEEKLY_AVAILABILITY: Record<string, string[]> = {

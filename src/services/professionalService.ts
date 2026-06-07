@@ -1,10 +1,19 @@
 ﻿import { api } from "./api";
 import { JobSpecs, Professional, WeeklyAvailability } from "../types";
 import { DEFAULT_WEEKLY_AVAILABILITY } from "../constants/professionalSpecs";
+import {
+  formatCategoryName,
+  formatDescription,
+  formatLocation,
+  formatPersonName,
+  formatTitle,
+} from "../utils/formatDisplay";
 
 function mapBackendProfessional(raw: any): Professional {
-  const category = raw.category?.name ?? raw.category ?? "Serviços gerais";
-  const location = raw.city && raw.state ? `${raw.city}, ${raw.state}` : raw.city ?? raw.state ?? "Localização não informada";
+  const categoryRaw = raw.category?.name ?? raw.category ?? "serviços gerais";
+  const city = raw.city ?? "";
+  const state = raw.state ?? "";
+  const location = city || state ? formatLocation(city, state) : "Localização não informada";
   const image = raw.image || "https://placehold.co/1200x400?text=Profissional";
   const avatar = raw.user?.avatar || "https://placehold.co/100x100?text=Avatar";
   const jobSpecs: JobSpecs | undefined = raw.job_specs ?? undefined;
@@ -14,17 +23,19 @@ function mapBackendProfessional(raw: any): Professional {
         .filter(([, value]) => value !== false && value !== '' && value !== null)
         .slice(0, 4)
         .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : String(value)}`)
-    : [category];
+    : [formatCategoryName(categoryRaw)];
 
   const todayKey = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][new Date().getDay()];
   const weekly = availability ?? DEFAULT_WEEKLY_AVAILABILITY;
   const availableToday = (weekly[todayKey] ?? []).length > 0;
+  const rawName = raw.user?.name ?? "profissional";
+  const rawTitle = raw.title ?? rawName;
 
   return {
     id: String(raw.id),
-    name: raw.user?.name ?? "Profissional",
-    title: raw.title ?? raw.user?.name ?? "Profissional",
-    category,
+    name: formatPersonName(rawName),
+    title: formatTitle(rawTitle),
+    category: formatCategoryName(categoryRaw),
     professionalType: raw.professional_type,
     location,
     price: raw.price_from ?? 0,
@@ -33,7 +44,7 @@ function mapBackendProfessional(raw: any): Professional {
     avatar,
     cover: image,
     verified: raw.is_featured ?? false,
-    description: raw.description ?? "",
+    description: formatDescription(raw.description ?? ""),
     services: servicesFromSpecs,
     gallery: raw.image ? [raw.image] : [],
     availableToday,

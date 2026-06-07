@@ -1,5 +1,6 @@
 import { api } from "./api";
 import { JobSpecs, ProfessionalType } from "../types";
+import { formatPersonName } from "../utils/formatDisplay";
 
 export type RegisterData = {
   name: string;
@@ -15,9 +16,20 @@ export type RegisterData = {
   job_specs?: JobSpecs;
 };
 
+function mapAuthUser(raw: { id: number; name: string; email: string; role: string; avatar?: string }) {
+  return {
+    ...raw,
+    id: String(raw.id),
+    name: formatPersonName(raw.name),
+  };
+}
+
 export async function registerUser(data: RegisterData) {
   const response = await api.post("/auth/register", data);
-  return response.data;
+  return {
+    ...response.data,
+    user: mapAuthUser(response.data.user),
+  };
 }
 
 export async function loginUser(email: string, password: string) {
@@ -26,5 +38,8 @@ export async function loginUser(email: string, password: string) {
     password,
   });
 
-  return response.data;
+  return {
+    ...response.data,
+    user: mapAuthUser(response.data.user),
+  };
 }
