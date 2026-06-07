@@ -1,59 +1,74 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getCategories } from '../services/categoryService';
+import { useSearchParams } from 'react-router-dom';
 import { useProfessionals } from '../hooks/useProfessionals';
 import { ProfessionalCard } from '../components/professionals/ProfessionalCard';
 import { SkeletonCard } from '../components/common/Skeleton';
-import { Category } from '../types';
+import { PROFESSIONAL_TYPE_LABELS, PROFESSIONAL_TYPES } from '../constants/professionalSpecs';
 
 export default function Search() {
+  const [searchParams] = useSearchParams();
+  const tipoFromUrl = searchParams.get('tipo') || '';
   const { professionals, loading } = useProfessionals();
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [category, setCategory] = useState('');
-  const [professionalType, setProfessionalType] = useState('');
+  const [professionalType, setProfessionalType] = useState(tipoFromUrl);
   const [location, setLocation] = useState('');
   const [rating, setRating] = useState('0');
   const [price, setPrice] = useState('999');
 
   useEffect(() => {
-    getCategories().then(setCategories).catch(console.error);
-  }, []);
+    setProfessionalType(tipoFromUrl);
+  }, [tipoFromUrl]);
 
   const filtered = useMemo(
     () =>
       professionals.filter(
         (item) =>
-          (!category || item.category === category) &&
           (!professionalType || item.professionalType === professionalType) &&
           (!location || item.location.toLowerCase().includes(location.toLowerCase())) &&
           item.rating >= Number(rating) &&
           item.price <= Number(price)
       ),
-    [professionals, category, professionalType, location, rating, price]
+    [professionals, professionalType, location, rating, price]
   );
 
   return (
     <section className="container-page py-10">
       <h1 className="heading-page">Buscar profissionais</h1>
-      <p className="mt-2 text-muted">Filtre por tipo, localização, avaliação e preço.</p>
+      <p className="mt-2 text-muted">Encontre diaristas e babás por localização, avaliação e preço.</p>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[320px_1fr]">
         <aside className="card h-max p-5">
           <div className="space-y-4">
-            <select className="input" value={professionalType} onChange={(e) => setProfessionalType(e.target.value)}>
-              <option value="">Todos os tipos</option>
-              <option value="diarista">Diarista</option>
-              <option value="baba">Babá</option>
-              <option value="montador">Montador de móveis</option>
-            </select>
-            <select className="input" value={category} onChange={(e) => setCategory(e.target.value)}>
-              <option value="">Todas as categorias</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.name}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-            <input className="input" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Localização" />
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">Tipo de serviço</p>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setProfessionalType('')}
+                  className={
+                    professionalType === ''
+                      ? 'rounded-xl bg-brand-600 py-2 text-sm font-bold text-white'
+                      : 'rounded-xl border border-slate-200 py-2 text-sm font-semibold dark:border-slate-700'
+                  }
+                >
+                  Todos
+                </button>
+                {PROFESSIONAL_TYPES.map((type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => setProfessionalType(type)}
+                    className={
+                      professionalType === type
+                        ? 'rounded-xl bg-brand-600 py-2 text-sm font-bold text-white'
+                        : 'rounded-xl border border-slate-200 py-2 text-sm font-semibold dark:border-slate-700'
+                    }
+                  >
+                    {PROFESSIONAL_TYPE_LABELS[type]}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <input className="input" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Cidade ou bairro" />
             <select className="input" value={rating} onChange={(e) => setRating(e.target.value)}>
               <option value="0">Todas avaliações</option>
               <option value="4.5">4.5+</option>
@@ -71,7 +86,6 @@ export default function Search() {
         <div>
           <div className="mb-4 flex justify-between text-sm text-slate-500">
             <span>{filtered.length} profissionais encontrados</span>
-            <span>Página 1 de 1</span>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -80,11 +94,9 @@ export default function Search() {
               : filtered.map((item) => <ProfessionalCard key={item.id} professional={item} />)}
           </div>
 
-          <div className="mt-8 flex justify-center gap-2">
-            <button className="btn-secondary">Anterior</button>
-            <button className="btn-primary">1</button>
-            <button className="btn-secondary">Próxima</button>
-          </div>
+          {!loading && filtered.length === 0 && (
+            <p className="mt-8 text-center text-muted">Nenhum profissional encontrado com esses filtros.</p>
+          )}
         </div>
       </div>
     </section>

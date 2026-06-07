@@ -38,7 +38,7 @@ export function ProfessionalOnboardingFields({ value, onChange }: Props) {
         Dados do perfil profissional
       </p>
 
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {PROFESSIONAL_TYPES.map((type) => (
           <button
             key={type}

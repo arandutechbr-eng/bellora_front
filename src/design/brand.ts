@@ -1,9 +1,9 @@
 /** Tokens de marca Zola — referência para consistência visual */
 export const BRAND = {
   name: 'Zola',
-  tagline: 'Profissionais verificados. Conexões de confiança.',
+  tagline: 'Diaristas e babás verificadas. Conexões de confiança.',
   description:
-    'Plataforma que conecta clientes e profissionais com transparência, segurança e experiência premium.',
+    'Plataforma especializada em diaristas e babás — com transparência, segurança e agenda clara.',
 } as const;
 
 export const COLORS = {

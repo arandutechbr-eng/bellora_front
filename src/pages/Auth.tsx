@@ -82,7 +82,7 @@ export default function Auth() {
           {isRegister ? 'Comece na' : 'Bem-vindo à'} {BRAND.name}
         </h1>
         <p className="mt-5 max-w-md text-lg text-muted">
-          Cadastre-se como cliente ou profissional. Diarista, babá ou montador — com especificações claras desde o primeiro passo.
+          Cadastre-se como cliente ou profissional. Diarista ou babá — com especificações claras desde o primeiro passo.
         </p>
         <ul className="mt-8 space-y-4">
           {['Autenticação protegida', 'Perfis verificados', 'Agenda transparente'].map((item) => (

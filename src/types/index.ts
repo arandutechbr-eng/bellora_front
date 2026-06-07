@@ -26,7 +26,7 @@ export interface Review {
   date: string;
 }
 
-export type ProfessionalType = 'diarista' | 'baba' | 'montador';
+export type ProfessionalType = 'diarista' | 'baba';
 
 export type JobSpecs = Record<string, string | number | boolean | string[]>;
 

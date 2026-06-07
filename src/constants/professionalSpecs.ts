@@ -1,12 +1,11 @@
-export type ProfessionalType = 'diarista' | 'baba' | 'montador';
+export type ProfessionalType = 'diarista' | 'baba';
 
 export const PROFESSIONAL_TYPE_LABELS: Record<ProfessionalType, string> = {
   diarista: 'Diarista',
   baba: 'Babá',
-  montador: 'Montador de móveis',
 };
 
-export const PROFESSIONAL_TYPES: ProfessionalType[] = ['diarista', 'baba', 'montador'];
+export const PROFESSIONAL_TYPES: ProfessionalType[] = ['diarista', 'baba'];
 
 export const WEEKDAYS = [
   { key: 'monday', label: 'Segunda' },
@@ -39,15 +38,6 @@ export const BABA_SPEC_FIELDS = [
   { key: 'ajuda_tarefas_domesticas', label: 'Ajuda em tarefas domésticas leves', type: 'boolean' },
 ] as const;
 
-export const MONTADOR_SPEC_FIELDS = [
-  { key: 'tipo_servico', label: 'Tipos de montagem', type: 'multiselect', options: ['móveis convencionais', 'móveis planejados', 'guarda-roupa', 'cozinha modulada', 'escrivaninha/cama', 'estantes e racks'] },
-  { key: 'experiencia_anos', label: 'Anos de experiência', type: 'number' },
-  { key: 'traz_ferramentas', label: 'Traz ferramentas próprias', type: 'boolean' },
-  { key: 'desmontagem_inclusa', label: 'Faz desmontagem', type: 'boolean' },
-  { key: 'segue_manual', label: 'Segue manual do fabricante', type: 'boolean' },
-  { key: 'montagem_urgente', label: 'Atende montagem urgente', type: 'boolean' },
-] as const;
-
 export const SPEC_FIELD_LABELS: Record<string, string> = {
   tipo_limpeza: 'Tipo de limpeza',
   frequencia: 'Frequência',
@@ -62,17 +52,10 @@ export const SPEC_FIELD_LABELS: Record<string, string> = {
   turnos: 'Turnos',
   primeiros_socorros: 'Primeiros socorros',
   ajuda_tarefas_domesticas: 'Tarefas domésticas leves',
-  tipo_servico: 'Tipos de montagem',
-  traz_ferramentas: 'Traz ferramentas',
-  desmontagem_inclusa: 'Desmontagem',
-  segue_manual: 'Segue manual',
-  montagem_urgente: 'Montagem urgente',
 };
 
 export function getSpecFields(type: ProfessionalType) {
-  if (type === 'diarista') return DIARISTA_SPEC_FIELDS;
-  if (type === 'baba') return BABA_SPEC_FIELDS;
-  return MONTADOR_SPEC_FIELDS;
+  return type === 'diarista' ? DIARISTA_SPEC_FIELDS : BABA_SPEC_FIELDS;
 }
 
 export function defaultJobSpecs(type: ProfessionalType): Record<string, string | number | boolean | string[]> {
@@ -87,23 +70,13 @@ export function defaultJobSpecs(type: ProfessionalType): Record<string, string |
       inclui_passar_roupa: false,
     };
   }
-  if (type === 'baba') {
-    return {
-      faixa_etaria: '0-3 anos',
-      experiencia_anos: 3,
-      numero_criancas: 2,
-      turnos: ['manhã', 'tarde'],
-      primeiros_socorros: false,
-      ajuda_tarefas_domesticas: true,
-    };
-  }
   return {
-    tipo_servico: ['móveis convencionais', 'móveis planejados'],
+    faixa_etaria: '0-3 anos',
     experiencia_anos: 3,
-    traz_ferramentas: true,
-    desmontagem_inclusa: true,
-    segue_manual: true,
-    montagem_urgente: false,
+    numero_criancas: 2,
+    turnos: ['manhã', 'tarde'],
+    primeiros_socorros: false,
+    ajuda_tarefas_domesticas: true,
   };
 }
 

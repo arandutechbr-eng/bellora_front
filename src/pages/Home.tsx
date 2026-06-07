@@ -40,11 +40,11 @@ export default function Home() {
               Encontre profissionais com a confiança de um produto premium.
             </h1>
             <p className="max-w-xl text-lg leading-relaxed text-muted">
-              {BRAND.description} Diaristas, babás, montadores e muito mais — com avaliações reais e agenda transparente.
+              {BRAND.description} Compare perfis, especificações e horários disponíveis antes de contratar.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link to="/buscar" className="btn-primary">
-                Explorar profissionais <FiArrowRight />
+                Encontrar profissional <FiArrowRight />
               </Link>
               <Link to="/login" className="btn-secondary">
                 Criar conta
@@ -70,7 +70,7 @@ export default function Home() {
               <h2 className="text-xl font-bold">Como funciona</h2>
               <ul className="mt-6 space-y-3">
                 {[
-                  { step: '1', title: 'Escolha o serviço', desc: 'Filtre por tipo, localização e avaliação.' },
+                  { step: '1', title: 'Escolha o serviço', desc: 'Diarista ou babá — filtre por local e avaliação.' },
                   { step: '2', title: 'Compare e converse', desc: 'Veja perfil, especificações e horários livres.' },
                   { step: '3', title: 'Agende com confiança', desc: 'Marque no calendário e acompanhe o pedido.' },
                 ].map((item) => (
@@ -103,8 +103,8 @@ export default function Home() {
           </div>
           <div className="mt-8 grid gap-4 md:mt-0">
             {[
-              { title: 'Missão', text: 'Facilitar contratações seguras e gerar oportunidades reais para profissionais.' },
-              { title: 'Visão', text: 'Ser a plataforma mais confiável para serviços residenciais e comerciais.' },
+              { title: 'Missão', text: 'Facilitar a contratação de diaristas e babás com segurança e transparência.' },
+              { title: 'Visão', text: 'Ser a plataforma mais confiável para serviços domésticos de limpeza e cuidado infantil.' },
             ].map((block) => (
               <div key={block.title} className="rounded-2xl border border-white/10 bg-white/5 p-6">
                 <h3 className="text-lg font-semibold">{block.title}</h3>
@@ -112,6 +112,27 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="container-page pb-8">
+        <div className="grid gap-4 sm:grid-cols-2">
+          {[
+            { type: 'diarista', title: 'Diarista', desc: 'Limpeza residencial, comercial e organização.', to: '/buscar?tipo=diarista' },
+            { type: 'baba', title: 'Babá', desc: 'Cuidado infantil com perfil detalhado e turnos claros.', to: '/buscar?tipo=baba' },
+          ].map((item) => (
+            <Link
+              key={item.type}
+              to={item.to}
+              className="card-interactive flex flex-col gap-2 p-6"
+            >
+              <h2 className="text-xl font-bold text-graphite-900 dark:text-white">{item.title}</h2>
+              <p className="text-sm text-muted">{item.desc}</p>
+              <span className="mt-2 text-sm font-semibold text-brand-600 dark:text-brand-400">
+                Ver profissionais →
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 
