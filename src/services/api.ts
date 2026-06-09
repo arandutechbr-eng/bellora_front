@@ -1,8 +1,13 @@
 import axios, { AxiosError } from 'axios';
 
+/** URL pública do backend (Render). Usada quando VITE_API_URL não está no build. */
+export const PRODUCTION_API_ORIGIN = 'https://zola-back.onrender.com';
+
 /** Garante sufixo /api/v1 (Render e local usam esse prefixo). */
 export function normalizeApiBaseUrl(raw?: string): string {
-  const fallback = 'http://localhost:8000/api/v1';
+  const fallback = import.meta.env.PROD
+    ? `${PRODUCTION_API_ORIGIN}/api/v1`
+    : 'http://localhost:8000/api/v1';
   const base = (raw?.trim() || fallback).replace(/\/$/, '');
 
   if (base.endsWith('/api/v1')) {
@@ -41,7 +46,7 @@ api.interceptors.response.use(
         : error.response?.statusText) ||
       (error.code === 'ECONNABORTED'
         ? 'A requisição demorou demais. Tente novamente.'
-        : 'Não foi possível conectar à API. Verifique se o backend está em execução.');
+        : `Não foi possível conectar à API (${API_BASE_URL}). Verifique se o backend está em execução.`);
 
     return Promise.reject({
       ...error,
