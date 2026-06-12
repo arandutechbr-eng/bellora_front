@@ -8,14 +8,19 @@ import {
   formatPersonName,
   formatTitle,
 } from "../utils/formatDisplay";
+import {
+  PLACEHOLDER_AVATAR,
+  PLACEHOLDER_COVER,
+  resolveMediaUrl,
+} from "../utils/mediaUrl";
 
 function mapBackendProfessional(raw: any): Professional {
   const categoryRaw = raw.category?.name ?? raw.category ?? "serviços gerais";
   const city = raw.city ?? "";
   const state = raw.state ?? "";
   const location = city || state ? formatLocation(city, state) : "Localização não informada";
-  const image = raw.image || "https://placehold.co/1200x400?text=Profissional";
-  const avatar = raw.user?.avatar || "https://placehold.co/100x100?text=Avatar";
+  const cover = resolveMediaUrl(raw.image, PLACEHOLDER_COVER);
+  const avatar = resolveMediaUrl(raw.user?.avatar || raw.image, PLACEHOLDER_AVATAR);
   const jobSpecs: JobSpecs | undefined = raw.job_specs ?? undefined;
   const availability: WeeklyAvailability | undefined = raw.availability ?? undefined;
   const servicesFromSpecs = jobSpecs
@@ -42,11 +47,11 @@ function mapBackendProfessional(raw: any): Professional {
     rating: raw.rating ?? 0,
     reviewsCount: raw.reviews_count ?? 0,
     avatar,
-    cover: image,
+    cover,
     verified: raw.is_featured ?? false,
     description: formatDescription(raw.description ?? ""),
     services: servicesFromSpecs,
-    gallery: raw.image ? [raw.image] : [],
+    gallery: cover !== PLACEHOLDER_COVER ? [cover] : [],
     availableToday,
     jobSpecs,
     availability: weekly,

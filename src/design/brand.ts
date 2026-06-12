@@ -5,6 +5,8 @@ export const BRAND = {
   taglineAlt: 'Conectando confiança, cuidado e oportunidades.',
   description:
     'Babás, diaristas e cuidadoras verificadas para oferecer mais tranquilidade ao seu dia.',
+  /** Imagem local — evita URLs externas quebradas no hero da home */
+  heroImage: '/images/hero-home.jpg',
 } as const;
 
 export const COLORS = {

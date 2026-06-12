@@ -9,12 +9,10 @@ import {
   FiStar,
   FiUsers,
 } from 'react-icons/fi';
+import { BRAND } from '../design/brand';
 import { getProfessionals } from '../services/professionalService';
 import { Professional } from '../types';
-import { BRAND } from '../design/brand';
-
-const HERO_IMAGE =
-  'https://images.unsplash.com/photo-1511895426328-d872591db115?q=80&w=1400&auto=format&fit=crop';
+import { resolveMediaUrl } from '../utils/mediaUrl';
 
 export default function Home() {
   const [professionals, setProfessionals] = useState<Professional[]>([]);
@@ -122,7 +120,7 @@ export default function Home() {
               className="relative mt-10 lg:mt-0"
             >
               <img
-                src={HERO_IMAGE}
+                src={BRAND.heroImage}
                 alt="Família em casa"
                 className="hero-image aspect-[4/3] w-full lg:aspect-auto lg:h-[480px]"
               />
@@ -273,7 +271,7 @@ export default function Home() {
               {professionals.map((pro) => (
                 <article key={pro.id} className="card-interactive overflow-hidden p-1">
                   <img
-                    src={pro.cover || pro.avatar || 'https://placehold.co/600x400?text=Profissional'}
+                    src={resolveMediaUrl(pro.cover || pro.avatar)}
                     alt={pro.name || 'Profissional'}
                     className="h-44 w-full rounded-xl object-cover"
                   />
