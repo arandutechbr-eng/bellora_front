@@ -53,18 +53,22 @@ export function AvailabilityCalendar({ professionalId, professionalName }: Props
     async function load() {
       setLoading(true);
       try {
-        const [availability, preview] = await Promise.all([
-          getProfessionalAvailability(professionalId, range.from, range.to),
-          getDepositPreview(professionalId),
-        ]);
+        const availability = await getProfessionalAvailability(professionalId, range.from, range.to);
         setDays(availability);
-        setDepositPreview(preview);
         if (availability.length > 0) {
           setSelectedDate(availability[0].date);
         }
       } catch (error) {
         console.error(error);
         setDays([]);
+      }
+
+      try {
+        const preview = await getDepositPreview(professionalId);
+        setDepositPreview(preview);
+      } catch (error) {
+        console.error(error);
+        setDepositPreview(null);
       } finally {
         setLoading(false);
       }
@@ -190,7 +194,7 @@ export function AvailabilityCalendar({ professionalId, professionalName }: Props
               <FiCreditCard className="text-accent-600" />
               {depositPreview.payments_enabled
                 ? `Sinal de ${formatCurrency(depositPreview.deposit_amount)} para confirmar`
-                : 'Agendamento sem cobrança (ambiente de testes)'}
+                : 'Agendamento sem cobrança no momento'}
             </p>
             <p className="mt-1 text-xs text-muted">
               {depositPreview.payments_enabled ? (
@@ -199,7 +203,7 @@ export function AvailabilityCalendar({ professionalId, professionalName }: Props
                   O horário só fica reservado após o pagamento do sinal.
                 </>
               ) : (
-                'Configure o Stripe no servidor para exigir pagamento em produção.'
+                'O sinal será cobrado quando o pagamento estiver ativo no servidor.'
               )}
             </p>
           </div>
