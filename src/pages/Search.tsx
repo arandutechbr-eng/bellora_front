@@ -18,12 +18,12 @@ export default function Search() {
 
   const [searchParams] = useSearchParams();
 
-  const tipoFromUrl = searchParams.get('tipo') || '';
+  const categoriaFromUrl = searchParams.get('categoria') || searchParams.get('tipo') || '';
   const localFromUrl = searchParams.get('local') || '';
 
   const { professionals, loading } = useProfessionals();
 
-  const [professionalType, setProfessionalType] = useState(tipoFromUrl);
+  const [professionalType, setProfessionalType] = useState(categoriaFromUrl);
 
   const [location, setLocation] = useState(localFromUrl);
 
@@ -37,11 +37,11 @@ export default function Search() {
 
   useEffect(() => {
 
-    setProfessionalType(tipoFromUrl);
+    setProfessionalType(categoriaFromUrl);
 
     setLocation(searchParams.get('local') || '');
 
-  }, [tipoFromUrl, searchParams]);
+  }, [categoriaFromUrl, searchParams]);
 
 
 
@@ -89,45 +89,19 @@ export default function Search() {
 
       <div>
 
-        <p className="form-label">Tipo de serviço</p>
-
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-1">
-
-          <button
-
-            type="button"
-
-            onClick={() => setProfessionalType('')}
-
-            className={professionalType === '' ? 'filter-chip filter-chip-active' : 'filter-chip'}
-
-          >
-
-            Todos
-
-          </button>
-
+        <p className="form-label">Categoria</p>
+        <select
+          className="input"
+          value={professionalType}
+          onChange={(e) => setProfessionalType(e.target.value)}
+        >
+          <option value="">Todas as categorias</option>
           {PROFESSIONAL_TYPES.map((type) => (
-
-            <button
-
-              key={type}
-
-              type="button"
-
-              onClick={() => setProfessionalType(type)}
-
-              className={professionalType === type ? 'filter-chip filter-chip-active' : 'filter-chip'}
-
-            >
-
+            <option key={type} value={type}>
               {PROFESSIONAL_TYPE_LABELS[type]}
-
-            </button>
-
+            </option>
           ))}
-
-        </div>
+        </select>
 
       </div>
 
@@ -227,7 +201,7 @@ export default function Search() {
 
         <p className="max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
 
-          Babás e diaristas verificadas — filtre por local, avaliação e preço.
+          Profissionais de beleza verificados — filtre por categoria, local, avaliação e preço.
 
         </p>
 

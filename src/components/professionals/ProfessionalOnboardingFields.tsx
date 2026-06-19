@@ -38,33 +38,36 @@ export function ProfessionalOnboardingFields({ value, onChange }: Props) {
         Dados do perfil profissional
       </p>
 
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-        {PROFESSIONAL_TYPES.map((type) => (
-          <button
-            key={type}
-            type="button"
-            onClick={() =>
-              onChange({
-                ...value,
-                professional_type: type,
-                job_specs: defaultJobSpecs(type),
-                title: value.title || `${PROFESSIONAL_TYPE_LABELS[type]} experiente`,
-              })
-            }
-            className={
-              value.professional_type === type
-                ? 'rounded-2xl bg-brand-600 py-2 text-sm font-bold text-white'
-                : 'rounded-2xl border border-slate-200 bg-white py-2 text-sm font-semibold dark:border-slate-700 dark:bg-slate-900'
-            }
-          >
-            {PROFESSIONAL_TYPE_LABELS[type]}
-          </button>
-        ))}
+      <div className="grid grid-cols-1 gap-2">
+        <label className="form-label" htmlFor="onboarding-category">
+          Categoria
+        </label>
+        <select
+          id="onboarding-category"
+          className="input"
+          value={value.professional_type}
+          onChange={(e) => {
+            const type = e.target.value as ProfessionalType;
+            onChange({
+              ...value,
+              professional_type: type,
+              job_specs: defaultJobSpecs(type),
+              title: value.title || `${PROFESSIONAL_TYPE_LABELS[type]} experiente`,
+            });
+          }}
+          required
+        >
+          {PROFESSIONAL_TYPES.map((type) => (
+            <option key={type} value={type}>
+              {PROFESSIONAL_TYPE_LABELS[type]}
+            </option>
+          ))}
+        </select>
       </div>
 
       <input
         className="input"
-        placeholder="Título do perfil (ex: Diarista residencial)"
+        placeholder="Título do perfil (ex: Colorista e cabeleireira)"
         value={value.title}
         onChange={(e) => onChange({ ...value, title: e.target.value })}
         required
@@ -220,11 +223,11 @@ export function ProfessionalOnboardingFields({ value, onChange }: Props) {
 }
 
 export const emptyProfessionalOnboarding = (): ProfessionalOnboardingData => ({
-  professional_type: 'diarista',
+  professional_type: 'cabelo',
   city: '',
   state: 'SP',
   title: '',
   description: '',
   price_from: '',
-  job_specs: defaultJobSpecs('diarista'),
+  job_specs: defaultJobSpecs('cabelo'),
 });

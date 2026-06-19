@@ -1,42 +1,44 @@
-# Zola — Design System
+# Bellora — Design System
 
-Identidade visual acolhedora para conexão entre famílias e profissionais domésticos.
+Identidade visual do marketplace de beleza e estética.
 
 ## Marca
 
-- **Nome:** Zola
-- **Slogan:** Cuidando de quem cuida da sua família.
-- **Alternativo:** Conectando confiança, cuidado e oportunidades.
+- **Nome:** Bellora
+- **Slogan:** Sua beleza, seu momento.
+- **Conceito:** Elegância + Tecnologia + Bem-estar + Conveniência
 
 ## Paleta
 
-| Token | HEX | Uso |
+| Token | Hex | Uso |
 |-------|-----|-----|
-| Azul Petróleo | `#2B4C7E` | Header, logo, botões primários, confiança |
-| Verde Sálvia | `#7BAE7F` | Verificação, ícones, apoio |
-| Amarelo Suave | `#F2C94C` | CTAs de conversão |
-| Off White | `#F7F2E8` | Fundo acolhedor |
-| Cinza Escuro | `#2D3748` | Textos |
+| Primary | `#6C63FF` | CTAs, links, destaques |
+| Secondary | `#BDB8FF` | Gradientes, hover |
+| Background | `#FFFFFF` | Fundo principal |
+| Text | `#2B2B2B` | Texto principal |
+| Success | `#22C55E` | Confirmações |
+| Warning | `#F59E0B` | Alertas |
+| Error | `#EF4444` | Erros |
 
 ## Tipografia
 
-- **Fonte:** DM Sans (Google Fonts)
+- **Corpo:** DM Sans
+- **Títulos:** Plus Jakarta Sans
 
-## Componentes (classes)
+## Estilo
 
-- `btn-primary` — ação principal (petróleo)
-- `btn-accent` — conversão (amarelo)
-- `btn-secondary` — ação secundária
-- `card` / `card-interactive` / `card-elevated`
-- `eyebrow` — rótulos de seção
-- `heading-display` / `heading-page` / `heading-section`
-- `badge-verified` — selo verificado
-
-## Princípios
-
-- Espaçamento generoso, bordas arredondadas (`rounded-2xl` / `rounded-3xl`)
-- Visual humano, fotografias reais, micro-animações (Framer Motion)
+- Design minimalista e premium
+- Bordas arredondadas (`rounded-2xl`, `rounded-3xl`)
+- Sombras suaves com tint violeta
+- Espaçamento generoso
 - Mobile first
-- Evitar aspecto de classificados ou excesso de informação
 
-Tokens em `src/design/brand.ts` e `tailwind.config.js`.
+## Tokens centralizados
+
+- Cores e copy: `src/design/brand.ts`
+- Tailwind: `tailwind.config.js`
+- Componentes globais: `src/styles.css`
+
+## Categorias
+
+Definidas em `src/constants/categories.ts` — 11 categorias expansíveis.

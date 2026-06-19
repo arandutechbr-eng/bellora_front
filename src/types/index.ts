@@ -26,7 +26,18 @@ export interface Review {
   date: string;
 }
 
-export type ProfessionalType = 'diarista' | 'baba';
+import type { CategorySlug } from '../constants/categories';
+
+export type ProfessionalType = CategorySlug;
+
+export interface Service {
+  id: string;
+  professionalId: string;
+  title: string;
+  description: string;
+  duration: number;
+  price: number;
+}
 
 export type JobSpecs = Record<string, string | number | boolean | string[]>;
 

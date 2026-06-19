@@ -1,20 +1,19 @@
 import { FormEvent, useState } from 'react';
 import { FiMapPin, FiSearch } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { PROFESSIONAL_TYPE_LABELS, PROFESSIONAL_TYPES } from '../../constants/professionalSpecs';
-
-type ServiceType = '' | 'diarista' | 'baba';
+import { BEAUTY_CATEGORIES } from '../../constants/categories';
+import type { CategorySlug } from '../../constants/categories';
 
 export function HeroSearchCard() {
   const navigate = useNavigate();
-  const [serviceType, setServiceType] = useState<ServiceType>('');
+  const [category, setCategory] = useState<CategorySlug | ''>('');
   const [location, setLocation] = useState('');
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const params = new URLSearchParams();
-    if (serviceType) params.set('tipo', serviceType);
+    if (category) params.set('categoria', category);
     if (location.trim()) params.set('local', location.trim());
 
     const query = params.toString();
@@ -25,22 +24,22 @@ export function HeroSearchCard() {
     <form
       onSubmit={handleSubmit}
       className="hero-search-card"
-      aria-label="Buscar cuidadores"
+      aria-label="Buscar profissionais de beleza"
     >
       <div className="hero-search-field">
-        <label className="hero-search-label" htmlFor="hero-service-type">
-          Tipo de serviço
+        <label className="hero-search-label" htmlFor="hero-category">
+          Categoria
         </label>
         <select
-          id="hero-service-type"
+          id="hero-category"
           className="hero-search-input"
-          value={serviceType}
-          onChange={(e) => setServiceType(e.target.value as ServiceType)}
+          value={category}
+          onChange={(e) => setCategory(e.target.value as CategorySlug | '')}
         >
-          <option value="">Todos os serviços</option>
-          {PROFESSIONAL_TYPES.map((type) => (
-            <option key={type} value={type}>
-              {PROFESSIONAL_TYPE_LABELS[type]}
+          <option value="">Todas as categorias</option>
+          {BEAUTY_CATEGORIES.map((cat) => (
+            <option key={cat.slug} value={cat.slug}>
+              {cat.name}
             </option>
           ))}
         </select>
@@ -59,7 +58,7 @@ export function HeroSearchCard() {
             id="hero-location"
             type="text"
             className="hero-search-input pl-11"
-            placeholder="Ex.: Santos, Praia Grande..."
+            placeholder="Ex.: Santos, São Paulo..."
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             autoComplete="address-level2"
@@ -69,7 +68,7 @@ export function HeroSearchCard() {
 
       <button type="submit" className="hero-search-btn">
         <FiSearch aria-hidden />
-        Buscar cuidadores
+        Encontrar Profissionais
       </button>
     </form>
   );

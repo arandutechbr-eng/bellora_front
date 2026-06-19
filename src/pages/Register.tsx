@@ -70,7 +70,7 @@ export default function Register() {
       >
         <h1 className="heading-page text-2xl">Criar conta</h1>
         <p className="text-sm text-muted">
-          Profissionais: escolha diarista ou babá e informe as especificações do serviço.
+          Profissionais: escolha sua categoria e informe as especificações do serviço.
         </p>
 
         {errorMessage && <div className="alert-error">{errorMessage}</div>}

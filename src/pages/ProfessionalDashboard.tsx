@@ -31,7 +31,7 @@ export default function ProfessionalDashboard() {
   const [stateUf, setStateUf] = useState("");
   const [priceFrom, setPriceFrom] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
-  const [professionalType, setProfessionalType] = useState<ProfessionalType>("diarista");
+  const [professionalType, setProfessionalType] = useState<ProfessionalType>("cabelo");
   const [jobSpecs, setJobSpecs] = useState<Record<string, unknown>>({});
   const [availability, setAvailability] = useState<WeeklyAvailability>(DEFAULT_WEEKLY_AVAILABILITY);
   const [loading, setLoading] = useState(true);
@@ -48,7 +48,7 @@ export default function ProfessionalDashboard() {
         setCity(loadedCity ?? "");
         setStateUf(loadedState ?? "");
         setPriceFrom(data.price?.toString() ?? "");
-        setProfessionalType(data.professionalType ?? "diarista");
+        setProfessionalType(data.professionalType ?? "cabelo");
         setJobSpecs(data.jobSpecs ?? {});
         setAvailability(data.availability ?? DEFAULT_WEEKLY_AVAILABILITY);
         setPhotoUrl(data.cover ?? "");

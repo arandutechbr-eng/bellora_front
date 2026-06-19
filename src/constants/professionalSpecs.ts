@@ -1,11 +1,14 @@
-export type ProfessionalType = 'diarista' | 'baba';
+import {
+  BEAUTY_CATEGORIES,
+  CATEGORY_LABELS,
+  CATEGORY_SLUGS,
+  CategorySlug,
+} from './categories';
 
-export const PROFESSIONAL_TYPE_LABELS: Record<ProfessionalType, string> = {
-  diarista: 'Diarista',
-  baba: 'Babá',
-};
+export type ProfessionalType = CategorySlug;
 
-export const PROFESSIONAL_TYPES: ProfessionalType[] = ['diarista', 'baba'];
+export const PROFESSIONAL_TYPE_LABELS = CATEGORY_LABELS;
+export const PROFESSIONAL_TYPES = CATEGORY_SLUGS;
 
 export const WEEKDAYS = [
   { key: 'monday', label: 'Segunda' },
@@ -17,66 +20,39 @@ export const WEEKDAYS = [
   { key: 'sunday', label: 'Domingo' },
 ] as const;
 
-export const TIME_SLOT_OPTIONS = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
+export const TIME_SLOT_OPTIONS = [
+  '07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
+  '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00',
+];
 
-export const DIARISTA_SPEC_FIELDS = [
-  { key: 'tipo_limpeza', label: 'Tipo de limpeza', type: 'select', options: ['residencial', 'comercial', 'pós-obra'] },
-  { key: 'frequencia', label: 'Frequência', type: 'select', options: ['avulsa', 'semanal', 'quinzenal', 'mensal'] },
-  { key: 'metros_aprox', label: 'Metros² aproximados', type: 'number' },
-  { key: 'traz_material', label: 'Traz material de limpeza', type: 'boolean' },
-  { key: 'inclui_cozinha', label: 'Inclui cozinha', type: 'boolean' },
-  { key: 'inclui_banheiros', label: 'Inclui banheiros', type: 'boolean' },
-  { key: 'inclui_passar_roupa', label: 'Inclui passar roupa', type: 'boolean' },
-] as const;
-
-export const BABA_SPEC_FIELDS = [
-  { key: 'faixa_etaria', label: 'Faixa etária atendida', type: 'select', options: ['0-3 anos', '4-7 anos', '8-12 anos', 'adolescentes'] },
+export const BEAUTY_SPEC_FIELDS = [
+  { key: 'especialidade', label: 'Especialidade principal', type: 'text' },
   { key: 'experiencia_anos', label: 'Anos de experiência', type: 'number' },
-  { key: 'numero_criancas', label: 'Nº máximo de crianças', type: 'number' },
-  { key: 'turnos', label: 'Turnos disponíveis', type: 'multiselect', options: ['manhã', 'tarde', 'noite', 'pernoite'] },
-  { key: 'primeiros_socorros', label: 'Curso de primeiros socorros', type: 'boolean' },
-  { key: 'ajuda_tarefas_domesticas', label: 'Ajuda em tarefas domésticas leves', type: 'boolean' },
+  { key: 'atendimento_domicilio', label: 'Atende em domicílio', type: 'boolean' },
+  { key: 'atendimento_salao', label: 'Atende em salão/estúdio', type: 'boolean' },
+  { key: 'aceita_cartao', label: 'Aceita cartão', type: 'boolean' },
 ] as const;
 
 export const SPEC_FIELD_LABELS: Record<string, string> = {
-  tipo_limpeza: 'Tipo de limpeza',
-  frequencia: 'Frequência',
-  metros_aprox: 'Metros² aproximados',
-  traz_material: 'Traz material',
-  inclui_cozinha: 'Inclui cozinha',
-  inclui_banheiros: 'Inclui banheiros',
-  inclui_passar_roupa: 'Passa roupa',
-  faixa_etaria: 'Faixa etária',
+  especialidade: 'Especialidade',
   experiencia_anos: 'Experiência (anos)',
-  numero_criancas: 'Máx. de crianças',
-  turnos: 'Turnos',
-  primeiros_socorros: 'Primeiros socorros',
-  ajuda_tarefas_domesticas: 'Tarefas domésticas leves',
+  atendimento_domicilio: 'Atendimento em domicílio',
+  atendimento_salao: 'Atendimento em salão',
+  aceita_cartao: 'Aceita cartão',
 };
 
-export function getSpecFields(type: ProfessionalType) {
-  return type === 'diarista' ? DIARISTA_SPEC_FIELDS : BABA_SPEC_FIELDS;
+export function getSpecFields(_type: ProfessionalType) {
+  return BEAUTY_SPEC_FIELDS;
 }
 
 export function defaultJobSpecs(type: ProfessionalType): Record<string, string | number | boolean | string[]> {
-  if (type === 'diarista') {
-    return {
-      tipo_limpeza: 'residencial',
-      frequencia: 'semanal',
-      traz_material: false,
-      metros_aprox: 80,
-      inclui_cozinha: true,
-      inclui_banheiros: true,
-      inclui_passar_roupa: false,
-    };
-  }
+  const category = BEAUTY_CATEGORIES.find((c) => c.slug === type);
   return {
-    faixa_etaria: '0-3 anos',
+    especialidade: category?.name ?? 'Beleza',
     experiencia_anos: 3,
-    numero_criancas: 2,
-    turnos: ['manhã', 'tarde'],
-    primeiros_socorros: false,
-    ajuda_tarefas_domesticas: true,
+    atendimento_domicilio: false,
+    atendimento_salao: true,
+    aceita_cartao: true,
   };
 }
 

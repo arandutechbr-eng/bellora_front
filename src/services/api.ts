@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
 /** URL pública do backend (Render). Usada quando VITE_API_URL não está no build. */
-export const PRODUCTION_API_ORIGIN = 'https://zola-back.onrender.com';
+export const PRODUCTION_API_ORIGIN = 'https://bellora-back.onrender.com';
 
 /** Garante sufixo /api/v1 (Render e local usam esse prefixo). */
 export function normalizeApiBaseUrl(raw?: string): string {

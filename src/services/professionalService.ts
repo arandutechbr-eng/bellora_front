@@ -58,8 +58,16 @@ function mapBackendProfessional(raw: any): Professional {
   };
 }
 
-export async function getProfessionals(params?: { professional_type?: string }) {
-  const response = await api.get("/professionals", { params });
+export async function getProfessionals(params?: {
+  professional_type?: string;
+  featured?: boolean;
+  city?: string;
+}) {
+  const apiParams: Record<string, string | boolean> = {};
+  if (params?.professional_type) apiParams.professional_type = params.professional_type;
+  if (params?.featured !== undefined) apiParams.featured = params.featured;
+  if (params?.city) apiParams.city = params.city;
+  const response = await api.get("/professionals", { params: apiParams });
   return Array.isArray(response.data) ? response.data.map(mapBackendProfessional) : [];
 }
 

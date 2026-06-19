@@ -20,12 +20,12 @@
 
   body {
     @apply bg-white font-sans text-base leading-relaxed text-ink;
-    background-image: radial-gradient(at 100% 0%, rgba(109, 93, 251, 0.06) 0px, transparent 50%);
+    background-image: radial-gradient(at 100% 0%, rgba(108, 99, 255, 0.06) 0px, transparent 50%);
   }
 
   .dark body {
     @apply bg-navy-950 text-ink-100;
-    background-image: radial-gradient(at 100% 0%, rgba(109, 93, 251, 0.12) 0px, transparent 50%);
+    background-image: radial-gradient(at 100% 0%, rgba(108, 99, 255, 0.12) 0px, transparent 50%);
   }
 
 
@@ -674,18 +674,8 @@
 
 
 
-  .category-diarista::before {
-
+  .category-beauty::before {
     @apply bg-gradient-brand;
-
-  }
-
-
-
-  .category-baba::before {
-
-    @apply bg-gradient-accent;
-
   }
 
 
