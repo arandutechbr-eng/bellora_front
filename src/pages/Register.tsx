@@ -7,10 +7,20 @@ import {
   ProfessionalOnboardingFields,
 } from "../components/professionals/ProfessionalOnboardingFields";
 
+function formatCpf(value: string): string {
+  const d = value.replace(/\D/g, "").slice(0, 11);
+  if (d.length <= 3) return d;
+  if (d.length <= 6) return `${d.slice(0, 3)}.${d.slice(3)}`;
+  if (d.length <= 9) return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6)}`;
+  return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6, 9)}-${d.slice(9)}`;
+}
+
 export default function Register() {
   const [form, setForm] = useState({
     name: "",
     email: "",
+    phone: "",
+    cpf: "",
     password: "",
     role: "client" as "client" | "professional",
   });
@@ -35,8 +45,13 @@ export default function Register() {
     try {
       setLoading(true);
 
+      if (form.cpf.replace(/\D/g, "").length !== 11) {
+        return setErrorMessage("CPF inválido. Informe os 11 dígitos.");
+      }
+
       const data = await registerUser({
         ...form,
+        cpf: form.cpf.replace(/\D/g, ""),
         ...(form.role === "professional"
           ? {
               professional_type: professionalData.professional_type,
@@ -101,7 +116,35 @@ export default function Register() {
 
         <input
           className="input"
-          placeholder="Senha"
+          placeholder="Telefone / WhatsApp (ex: 13991234567)"
+          type="tel"
+          value={form.phone}
+          onChange={(e) => {
+            const digits = e.target.value.replace(/\D/g, "").slice(0, 11);
+            setForm({ ...form, phone: digits });
+            setErrorMessage("");
+          }}
+          required
+        />
+
+        <input
+          className="input"
+          placeholder="CPF (somente números)"
+          type="text"
+          inputMode="numeric"
+          maxLength={14}
+          value={formatCpf(form.cpf)}
+          onChange={(e) => {
+            const digits = e.target.value.replace(/\D/g, "").slice(0, 11);
+            setForm({ ...form, cpf: digits });
+            setErrorMessage("");
+          }}
+          required
+        />
+
+        <input
+          className="input"
+          placeholder="Senha (mínimo 6 caracteres)"
           type="password"
           value={form.password}
           onChange={(e) => {
