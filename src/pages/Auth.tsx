@@ -12,10 +12,20 @@ import {
   ProfessionalOnboardingFields,
 } from '../components/professionals/ProfessionalOnboardingFields';
 
+function formatCpf(value: string): string {
+  const d = value.replace(/\D/g, '').slice(0, 11);
+  if (d.length <= 3) return d;
+  if (d.length <= 6) return `${d.slice(0, 3)}.${d.slice(3)}`;
+  if (d.length <= 9) return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6)}`;
+  return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6, 9)}-${d.slice(9)}`;
+}
+
 export default function Auth() {
   const [role, setRole] = useState<UserRole>('client');
   const [isRegister, setIsRegister] = useState(false);
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [cpf, setCpf] = useState('');
   const [professionalData, setProfessionalData] = useState(emptyProfessionalOnboarding());
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -43,6 +53,16 @@ export default function Auth() {
       return setErrorMessage('Informe seu nome completo para cadastro.');
     }
 
+    if (isRegister && phone.replace(/\D/g, '').length < 10) {
+      setLoading(false);
+      return setErrorMessage('Informe um telefone válido com DDD.');
+    }
+
+    if (isRegister && cpf.replace(/\D/g, '').length !== 11) {
+      setLoading(false);
+      return setErrorMessage('CPF inválido. Informe os 11 dígitos.');
+    }
+
     if (isRegister && role === 'professional') {
       if (!professionalData.city || !professionalData.state || !professionalData.title || !professionalData.description) {
         setLoading(false);
@@ -51,18 +71,23 @@ export default function Auth() {
     }
 
     try {
-      const extra =
-        isRegister && role === 'professional'
-          ? {
-              professional_type: professionalData.professional_type,
-              city: professionalData.city,
-              state: professionalData.state,
-              title: professionalData.title,
-              description: professionalData.description,
-              price_from: professionalData.price_from ? Number(professionalData.price_from) : undefined,
-              job_specs: professionalData.job_specs,
-            }
-          : undefined;
+      const extra = isRegister
+        ? {
+            phone: phone.replace(/\D/g, ''),
+            cpf: cpf.replace(/\D/g, ''),
+            ...(role === 'professional'
+              ? {
+                  professional_type: professionalData.professional_type,
+                  city: professionalData.city,
+                  state: professionalData.state,
+                  title: professionalData.title,
+                  description: professionalData.description,
+                  price_from: professionalData.price_from ? Number(professionalData.price_from) : undefined,
+                  job_specs: professionalData.job_specs,
+                }
+              : {}),
+          }
+        : undefined;
 
       await login(email, password, role, isRegister, fullName, extra);
       toast(isRegister ? 'Cadastro realizado!' : 'Login realizado!');
@@ -144,22 +169,60 @@ export default function Auth() {
         </div>
 
         {isRegister && (
-          <div className="mt-4">
-            <label className="form-label" htmlFor="auth-name">
-              Nome completo
-            </label>
-            <input
-              id="auth-name"
-              name="name"
-              className="input"
-              placeholder="Seu nome"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                setErrorMessage('');
-              }}
-              required
-            />
+          <div className="mt-4 space-y-3">
+            <div>
+              <label className="form-label" htmlFor="auth-name">
+                Nome completo
+              </label>
+              <input
+                id="auth-name"
+                name="name"
+                className="input"
+                placeholder="Seu nome"
+                value={name}
+                onChange={(e) => { setName(e.target.value); setErrorMessage(''); }}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="form-label" htmlFor="auth-phone">
+                Telefone / WhatsApp
+              </label>
+              <input
+                id="auth-phone"
+                name="phone"
+                type="tel"
+                className="input"
+                placeholder="(11) 99999-9999"
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value.replace(/\D/g, '').slice(0, 11));
+                  setErrorMessage('');
+                }}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="form-label" htmlFor="auth-cpf">
+                CPF
+              </label>
+              <input
+                id="auth-cpf"
+                name="cpf"
+                type="text"
+                inputMode="numeric"
+                className="input"
+                placeholder="000.000.000-00"
+                value={formatCpf(cpf)}
+                onChange={(e) => {
+                  setCpf(e.target.value.replace(/\D/g, '').slice(0, 11));
+                  setErrorMessage('');
+                }}
+                required
+              />
+            </div>
           </div>
         )}
 
